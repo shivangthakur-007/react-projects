@@ -18,7 +18,7 @@ interface TimeInterface {
 
 interface ContextValue {
   audioRef: React.RefObject<HTMLAudioElement | null>;
-  seekBar: React.RefObject<HTMLDivElement|null>;
+  seekBar: React.RefObject<HTMLHRElement|null>;
   seekBg: React.RefObject<HTMLDivElement | null>;
 
   track: ArrayInterface; // ← Always defined
@@ -65,6 +65,7 @@ const defaultContextValue: ContextValue = {
   },
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const playerContext = createContext<ContextValue>(defaultContextValue);
 
 interface PlayerContextProviderProps {
