@@ -33,7 +33,7 @@ interface ContextValue {
   playWithId: (id: number) => Promise<void>;
   previous: () => void;
   next: () => void;
-  seekSong: () => Promise<void>;
+  seekSong: (e: { nativeEvent: { offsetX: number } }) => Promise<void>;
 }
 
 // Default value uses first song — safe because songsData has items
@@ -60,8 +60,8 @@ const defaultContextValue: ContextValue = {
   next: () => {
     console.warn("next() called without playerContext");
   },
-  seekSong: async() => {
-    console.warn("seekSong() called without playerContext");
+  seekSong: async(e: { nativeEvent: { offsetX: number } }) => {
+    console.warn(`seekSong() called without playerContext ${e}`);
   },
 };
 
@@ -77,7 +77,7 @@ const PlayerContextProvider: React.FC<PlayerContextProviderProps> = ({
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const seekBg = useRef<HTMLDivElement>(null);
-  const seekBar = useRef<HTMLDivElement | null>(null);
+  const seekBar = useRef<HTMLHRElement | null>(null);
 
   const [track, setTrack] = useState<ArrayInterface>(songsData[0]);
   const [playStatus, setPlayStatus] = useState<boolean>(false);
@@ -123,7 +123,7 @@ const PlayerContextProvider: React.FC<PlayerContextProviderProps> = ({
     };
   }
 
-  const seekSong = async (e: SeekEvent): Promise<void> => {
+  const seekSong = async (e: SeekEvent) => {
     if (audioRef.current) {
       audioRef.current.currentTime =
         (e.nativeEvent.offsetX / seekBg.current!.offsetWidth) *
